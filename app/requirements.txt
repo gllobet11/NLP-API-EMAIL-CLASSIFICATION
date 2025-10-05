@@ -1,0 +1,15 @@
+
+fastapi
+uvicorn[standard]
+scikit-learn
+pandas
+numpy
+sqlalchemy
+pymysql
+joblib
+imbalanced-learn
+sentence-transformers
+lightgbm
+transformers
+sentencepiece
+sacremoses

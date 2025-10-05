@@ -1,0 +1,13 @@
+# Entornos virtuales y caché de Python
+.venv/
+__pycache__/
+*.pyc
+
+# Datos, modelos y logs generados
+data/
+model/
+model_cache/
+*.log
+
+# Excepción: versionar solo la plantilla de etiquetas inicial
+!data/labels_template.csv

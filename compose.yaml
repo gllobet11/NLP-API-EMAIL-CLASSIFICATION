@@ -1,0 +1,58 @@
+services:
+  db:
+    container_name: mysql_db
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: atc
+    command: [
+      "--character-set-server=utf8mb4",
+      "--collation-server=utf8mb4_unicode_ci",
+      "--init-connect=SET NAMES utf8mb4"
+    ]
+    volumes:
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      # Recomendado: persiste datos de MySQL
+      # - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  app:
+    container_name: atc_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /app
+    volumes:
+      - ./app:/app
+      - ./scripts:/scripts # <-- NUEVO: Mapea también la carpeta de scripts
+      - ./data:/app/data
+      - ./model:/app/model
+      - ./model_cache:/app/model_cache
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASS: root
+      DB_NAME: atc
+      HF_HOME: /app/model_cache
+      PYTHONUNBUFFERED: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      TOKENIZERS_PARALLELISM: "false"
+      PYTHONPATH: /app  # <-- Asegura que /app esté en PYTHONPATH
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    # Si quieres que entrene al levantar, descomenta:
+    # command: ["python", "-u", "train2.py"]
+
+#volumes:
+#  db_data:
