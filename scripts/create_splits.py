@@ -1,5 +1,3 @@
-# /app/scripts/create_split.py
-
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
@@ -12,9 +10,6 @@ except FileNotFoundError:
     print(f"Error: {INPUT_FILE} no encontrado. Asegúrate de ejecutar augment_data.py primero.")
     exit()
 
-# --- EL PREPROCESAMIENTO YA NO ES NECESARIO AQUÍ ---
-# Se asume que los datos ya están limpios y mapeados desde el paso de aumentación.
-# Sin embargo, lo mantenemos por seguridad.
 
 df["categoria"] = df["categoria"].astype(str).str.strip().str.lower().replace({"nan": None})
 df.dropna(subset=["categoria"], inplace=True)

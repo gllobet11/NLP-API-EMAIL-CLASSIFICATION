@@ -7,15 +7,13 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: atc
-    command: [
-      "--character-set-server=utf8mb4",
-      "--collation-server=utf8mb4_unicode_ci",
-      "--init-connect=SET NAMES utf8mb4"
-    ]
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --init-connect=SET NAMES utf8mb4
     volumes:
       - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
-      # Recomendado: persiste datos de MySQL
-      # - db_data:/var/lib/mysql
+      # - db_data:/var/lib/mysql   # descomenta si quieres persistir
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-proot"]
       interval: 10s
@@ -29,30 +27,27 @@ services:
       context: .
       dockerfile: Dockerfile
     working_dir: /app
+    # Mapea TODO el proyecto; así /app incluye app/, utils/, scripts/, data/, model/
     volumes:
-      - ./app:/app
-      - ./scripts:/scripts # <-- NUEVO: Mapea también la carpeta de scripts
-      - ./data:/app/data
-      - ./model:/app/model
-      - ./model_cache:/app/model_cache
+      - .:/app
     environment:
       DB_HOST: db
       DB_USER: root
       DB_PASS: root
       DB_NAME: atc
-      HF_HOME: /app/model_cache
       PYTHONUNBUFFERED: "1"
       OMP_NUM_THREADS: "1"
       MKL_NUM_THREADS: "1"
       TOKENIZERS_PARALLELISM: "false"
-      PYTHONPATH: /app  # <-- Asegura que /app esté en PYTHONPATH
+      PYTHONPATH: /app     # clave para que 'import utils...' funcione
+      HF_HOME: /app/model_cache
     depends_on:
       db:
         condition: service_healthy
     ports:
       - "8000:8000"
-    # Si quieres que entrene al levantar, descomenta:
-    # command: ["python", "-u", "train2.py"]
+    # Si quieres un comando distinto al arrancar (p.ej. entrenar), cámbialo aquí:
+    # command: ["python", "-u", "scripts/train.py"]
 
 #volumes:
 #  db_data:

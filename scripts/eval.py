@@ -1,14 +1,13 @@
-# /app/eval.py
 import os
 import logging
 import numpy as np
 import pandas as pd
 from datetime import datetime
 from sqlalchemy import create_engine
-
-# Registrar clases del pipeline (Preprocessor, Embeddings, KeywordFlags, etc.)
-import utils.model_components  # noqa: F401
-import classifier  # usa classifier.get_model()
+from app import classifier 
+import utils.model_components as umc
+import sys
+sys.modules.setdefault("model_components", umc)  # alias si tu .joblib lo necesita
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
@@ -26,11 +25,9 @@ def load_gold() -> pd.DataFrame:
     """
     logging.info("Cargando datos de test desde /app/data/test_labels.csv...")
     
-    # --- ÚNICO PASO: Cargar el CSV de test ---
-    # Este archivo ya contiene 'id', 'email' y 'categoria'
+    # ---  Cargar el CSV de test ---
     df = pd.read_csv("/app/data/test_labels.csv")
     
-    # El resto del preprocesamiento de categorías se mantiene igual
     df["categoria"] = df["categoria"].astype(str).str.strip().str.lower().replace({"nan": None})
     df.dropna(subset=["categoria"], inplace=True)
 

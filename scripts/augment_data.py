@@ -1,5 +1,3 @@
-# /app/augment_data.py
-
 import pandas as pd
 from transformers import pipeline
 import logging
@@ -53,20 +51,3 @@ output_path = "/app/data/labels_augmented.csv"
 df_final_aumentado.to_csv(output_path, index=False)
 
 logging.info(f"¡Proceso completado! Se ha creado un nuevo dataset con {len(df_final_aumentado)} ejemplos en: {output_path}")
-
-##posible implementacion futura:
-# import random
-
-# SYNONYMS = {
-#     "factura": ["recibo", "cobro"],
-#     "contrato": ["acuerdo", "póliza"],
-#     "problema": ["incidencia", "error", "fallo"],
-#     "cambiar": ["modificar", "actualizar"],
-# }
-
-# def replace_synonyms(text: str) -> str:
-#     words = text.split()
-#     for i, word in enumerate(words):
-#         if word in SYNONYMS and random.random() < 0.5: # 50% de probabilidad de reemplazar
-#             words[i] = random.choice(SYNONYMS[word])
-#     return " ".join(words)

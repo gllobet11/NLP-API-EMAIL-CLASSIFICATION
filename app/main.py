@@ -1,21 +1,18 @@
-# /app/main.py
-
 import os
 import logging
 from typing import Union
-from datetime import datetime  # <-- 1. IMPORTA DATETIME
+from datetime import datetime  
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from sqlalchemy import create_engine, text
 
-# Importa la lógica de predicción
-from classifier import predecir_categoria
 
-# Shims de compatibilidad para cargar el modelo
-import utils.model_components
+from .classifier import predecir_categoria
+
+import utils.model_components as umc
 import sys
-sys.modules["model_components"] = utils.model_components
+sys.modules.setdefault("model_components", umc)
 
 app = FastAPI(
     title="API de Clasificación de Emails",
@@ -32,7 +29,6 @@ engine = create_engine(DATABASE_URL, pool_pre_ping=True)
 
 
 # --- Modelos Pydantic ---
-
 class ClassifyRequest(BaseModel):
     client_id: int
     fecha_envio: datetime  # cambiamos string a datetime

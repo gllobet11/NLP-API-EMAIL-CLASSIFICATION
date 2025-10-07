@@ -1,0 +1,57 @@
+# ================================
+# 🧹 IGNORAR ARCHIVOS Y CARPETAS LOCALES
+# ================================
+
+# Entorno virtual y cachés
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Archivos temporales o de logs
+*.log
+*.tmp
+*.bak
+*.swp
+
+# ================================
+# 🧱 DIRECTORIOS GRANDES / NO NECESARIOS EN BUILD
+# ================================
+
+# Datos de entrenamiento, outputs, resultados...
+data/
+model/
+model_cache/
+outputs/
+logs/
+
+# ================================
+# 🧰 CONFIGURACIÓN LOCAL
+# ================================
+
+# Archivos de entorno o secretos locales
+.env
+.env.*
+*.sqlite3
+
+# ================================
+# 🧩 CONTROL DE VERSIONES / SISTEMA
+# ================================
+
+.git/
+.gitignore
+.DS_Store
+.idea/
+.vscode/
+__MACOSX/
+
+# ================================
+# 🚀 EXCEPCIONES (archivos necesarios)
+# ================================
+!requirements.txt
+!compose.yaml
+!Dockerfile
+!app/
+!utils/
+!scripts/

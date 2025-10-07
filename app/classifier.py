@@ -1,4 +1,3 @@
-# /app/classifier.py
 
 import os
 import re
@@ -9,24 +8,14 @@ import joblib
 import pandas as pd
 import logging
 
-# --- Registrar clases y crear alias de compatibilidad para que joblib cargue el modelo ---
+
 try:
-    # Asegúrate de que utils es un paquete (debe existir /app/utils/__init__.py)
     import utils.model_components as umc
-    
-    # Alias back-compat: para modelos guardados cuando el módulo se llamaba 'model_components'
+    # Compatibilidad con artefactos antiguos
     sys.modules.setdefault("utils.model_components", umc)
-    sys.modules["model_components"] = umc
-
-    # Alias back-compat: para modelos guardados cuando KeywordFlags vivía en 'features'
-    if "features" not in sys.modules:
-        m = types.ModuleType("features")
-        m.KeywordFlags = umc.KeywordFlags
-        sys.modules["features"] = m
-except ImportError:
-    logging.error("No se pudo importar 'utils.model_components'. Asegúrate de que el archivo y la carpeta existen.")
-# ------------------------------------------------------------------------------------
-
+    sys.modules.setdefault("model_components", umc)
+except Exception as e:
+    logging.error("No se pudo importar utils.model_components: %s", e)
 
 MODEL_PATH = "/app/model/text_classifier.joblib"
 _modelo_principal = None  # Cache interno del modelo

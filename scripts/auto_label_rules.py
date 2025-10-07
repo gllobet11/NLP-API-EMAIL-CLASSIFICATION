@@ -2,7 +2,7 @@ import re, unicodedata, os
 import pandas as pd
 
 IN = "/app/data/labels_template.csv"
-OUT = "/app/data/labels_template.csv"  # sobreescribimos
+OUT = "/app/data/labels_template.csv" 
 
 # --- limpieza idéntica a la exploración ---
 def strip_accents(s: str) -> str:
@@ -13,10 +13,10 @@ def clean_text(s: str) -> str:
     if not s:
         return ""
     s = s.replace("\r", " ").replace("\n", " ")
-    s = s.replace("\u00a0", " ")      # nbsp
-    s = s.replace("\u00ad", "")       # soft hyphen
-    s = re.sub(r"[\u200b-\u200f\u202a-\u202e\ufeff]", "", s)  # zero width & bidi
-    s = re.sub(r"(\w)[\-\u00ad]\s+(\w)", r"\1\2", s)          # electro- nico -> electronico
+    s = s.replace("\u00a0", " ")      
+    s = s.replace("\u00ad", "")      
+    s = re.sub(r"[\u200b-\u200f\u202a-\u202e\ufeff]", "", s)  
+    s = re.sub(r"(\w)[\-\u00ad]\s+(\w)", r"\1\2", s)        
     s = s.lower()
     s = strip_accents(s)
     s = re.sub(r"[^a-z0-9 ]", " ", s)
